@@ -52,7 +52,7 @@ textarea:focus {
 .container {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 12px;
 }
 
 .summary {
