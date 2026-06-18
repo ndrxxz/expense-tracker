@@ -218,7 +218,8 @@ textarea {
 }
 
 .btn-delete:hover {
-    color: #D85A30;
+    background: #D85A30;
+    padding: 4px;
 }
 
 .empty-state {
