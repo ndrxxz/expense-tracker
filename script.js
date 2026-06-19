@@ -19,7 +19,7 @@ const emptyState = document.querySelector("#empty-state");
 let totalBudget = 0;
 let totalAmount = 0;
 let totalRemaining = 0;
-let expense = [];
+let expenses = [];
 
 btnSaveBudget.addEventListener("click", () => {
     const budgetValue = inputBudget.value.trim();
@@ -73,7 +73,7 @@ btnAddExpense.addEventListener("click", () => {
     inputDate.value = "";
     inputNotes.value = "";
 
-    saveExpenses();
+    // saveExpenses();
 });
 
 expenseList.addEventListener("click", (e) => {
@@ -88,7 +88,7 @@ expenseList.addEventListener("click", (e) => {
         emptyState.style.display = "block";
         summarySpent.textContent = "₱0";
         summaryRemaining.textContent = `₱${totalBudget}`;
-        saveExpenses();
+        // saveExpenses();
         return;
     }
 
@@ -104,7 +104,7 @@ function updateSummary() {
 
     summaryRemaining.style.color = totalRemaining < 0 ? "#D85A30" : "#1D9E75";
 
-    saveExpenses();
+    // saveExpenses();
 }
 
 function formatDate(dateVal) {
@@ -122,18 +122,18 @@ const categoryIcons = {
     Other: "📦"
 };
 
-const saveExpenses = () => {
-    localStorage.setItem("expenses", expenseList.innerHTML);
-}
+// const saveExpenses = () => {
+//     localStorage.setItem("expenses", expenseList.innerHTML);
+// }
 
-const getExpenses = () => {
-    expenseList.innerHTML = localStorage.getItem("expenses") || "";
+// const getExpenses = () => {
+//     expenseList.innerHTML = localStorage.getItem("expenses") || "";
 
-    if (expenseList.children.length === 0) {
-        emptyState.style.display = "block";
-    } else {
-        emptyState.style.display = "none";
-    }
-}
+//     if (expenseList.children.length === 0) {
+//         emptyState.style.display = "block";
+//     } else {
+//         emptyState.style.display = "none";
+//     }
+// }
 
 // getExpenses();
