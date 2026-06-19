@@ -32,7 +32,7 @@ btnSaveBudget.addEventListener("click", () => {
 
     inputBudget.value = "";
 
-    saveExpenses();
+    // saveExpenses();
 });
 
 btnAddExpense.addEventListener("click", () => {
@@ -48,32 +48,23 @@ btnAddExpense.addEventListener("click", () => {
 
     updateSummary();
 
-    let div = document.createElement("div");
-    div.classList.add("expense-row");
+    const newExpense = {
+        description: descValue,
+        amount: parseFloat(amountValue),
+        category: categoryValue,
+        date: dateValue,
+        notes: notesValue
+    };
 
-    div.innerHTML = `
-        <div class="expense-icon">${categoryIcons[categoryValue]}</div>
+    expenses.push(newExpense);
 
-        <div class="expense-info">
-            <div class="expense-name">${descValue}</div>
-            <div class="expense-meta">${categoryValue} · ${formatDate(dateValue)}</div>
-        </div>
-
-        <div class="expense-amount">-₱${amountValue}</div>
-
-        <button class="btn-delete">🗑️</button>
-    `;
-
-    expenseList.appendChild(div);
-    emptyState.style.display = "none";
+    renderExpenses();
 
     inputDesc.value = "";
     inputAmount.value = "";
     inputCategory.value = "";
     inputDate.value = "";
     inputNotes.value = "";
-
-    // saveExpenses();
 });
 
 expenseList.addEventListener("click", (e) => {
@@ -84,15 +75,19 @@ expenseList.addEventListener("click", (e) => {
 
     if (deleteBtn) {
         const expenseRow = deleteBtn.closest(".expense-row");
-        expenseRow.remove();
-        emptyState.style.display = "block";
-        summarySpent.textContent = "₱0";
-        summaryRemaining.textContent = `₱${totalBudget}`;
+        const index = expenseRow.dataset.index;
+        const expenseToDelete = expenses[index];
+
+        if (index > -1) {
+            totalAmount -= expenseToDelete.amount
+            expenses.splice(index, 1);
+        }
+
+        updateSummary();
+        renderExpenses();
         // saveExpenses();
         return;
     }
-
-    emptyState.style.display = "none";
 });
 
 function updateSummary() {
@@ -105,6 +100,37 @@ function updateSummary() {
     summaryRemaining.style.color = totalRemaining < 0 ? "#D85A30" : "#1D9E75";
 
     // saveExpenses();
+}
+
+function renderExpenses() {
+    expenseList.innerHTML = "";
+
+    if (expenses.length === 0) {
+        emptyState.style.display = "block";
+    } else {
+        emptyState.style.display = "none";
+    }
+
+    expenses.forEach((expense, index) => {
+        let div = document.createElement("div");
+        div.classList.add("expense-row");
+        div.dataset.index = index;
+
+        div.innerHTML = `
+            <div class="expense-icon">${categoryIcons[expense.category]}</div>
+
+            <div class="expense-info">
+                <div class="expense-name">${expense.description}</div>
+                <div class="expense-meta">${expense.category} · ${formatDate(expense.date)}</div>
+            </div>
+
+            <div class="expense-amount">-₱${expense.amount}</div>
+
+            <button class="btn-delete">🗑️</button>
+        `;
+
+        expenseList.appendChild(div);
+    });
 }
 
 function formatDate(dateVal) {
