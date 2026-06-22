@@ -29,10 +29,9 @@ btnSaveBudget.addEventListener("click", () => {
     totalBudget = parseFloat(budgetValue);
 
     updateSummary();
+    saveBudget();
 
     inputBudget.value = "";
-
-    // saveExpenses();
 });
 
 btnAddExpense.addEventListener("click", () => {
@@ -59,6 +58,7 @@ btnAddExpense.addEventListener("click", () => {
     expenses.push(newExpense);
 
     renderExpenses();
+    saveExpenses();
 
     inputDesc.value = "";
     inputAmount.value = "";
@@ -85,7 +85,8 @@ expenseList.addEventListener("click", (e) => {
 
         updateSummary();
         renderExpenses();
-        // saveExpenses();
+        saveExpenses();
+
         return;
     }
 });
@@ -98,8 +99,6 @@ function updateSummary() {
     summaryRemaining.textContent = `₱${totalRemaining}`;
 
     summaryRemaining.style.color = totalRemaining < 0 ? "#D85A30" : "#1D9E75";
-
-    // saveExpenses();
 }
 
 function renderExpenses() {
@@ -148,18 +147,28 @@ const categoryIcons = {
     Other: "📦"
 };
 
-// const saveExpenses = () => {
-//     localStorage.setItem("expenses", expenseList.innerHTML);
-// }
+const saveExpenses = () => {
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+}
 
-// const getExpenses = () => {
-//     expenseList.innerHTML = localStorage.getItem("expenses") || "";
+const getExpenses = () => {
+    const stored = localStorage.getItem("expenses");
+    expenses = JSON.parse(stored) || [];
 
-//     if (expenseList.children.length === 0) {
-//         emptyState.style.display = "block";
-//     } else {
-//         emptyState.style.display = "none";
-//     }
-// }
+    totalAmount = expenses.reduce((sum, expense) => sum + expense.amount, 0);
 
-// getExpenses();
+    renderExpenses();
+}
+
+const saveBudget = () => {
+    localStorage.setItem("budget", JSON.stringify(totalBudget));
+};
+
+const getBudget = () => {
+    const stored = localStorage.getItem("budget");
+    totalBudget = JSON.parse(stored) || 0;
+}
+
+getBudget();
+getExpenses();
+updateSummary();
